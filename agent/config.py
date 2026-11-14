@@ -90,6 +90,7 @@ class Settings:
 
     btc_filter: bool
     btc_strict: bool
+    telegram_poll: bool
     dry_run: bool
     journal_path: str
     trade_journal_path: str
@@ -141,6 +142,7 @@ def load_settings() -> Settings:
         news_max_macro=_i("NEWS_MAX_MACRO", 3),
         btc_filter=_b("BTC_FILTER", True),
         btc_strict=_b("BTC_STRICT", False),
+        telegram_poll=_b("TELEGRAM_POLL", True),
         dry_run=_b("DRY_RUN", False),
         journal_path=os.getenv("JOURNAL_PATH", "data/journal.json").strip(),
         trade_journal_path=os.getenv("TRADE_JOURNAL_PATH", "data/trade_journal.json").strip(),

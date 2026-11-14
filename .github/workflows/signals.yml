@@ -40,6 +40,9 @@ jobs:
           MAX_PER_SIDE_PER_RUN: ${{ vars.MAX_PER_SIDE_PER_RUN }}
           COOLDOWN_HOURS: ${{ vars.COOLDOWN_HOURS }}
           BTC_STRICT: ${{ vars.BTC_STRICT }}
+          # Telegram polling Live Chat workflow karta hai — yahan band, warna
+          # offset race ho kar commands duplicate ho sakti hain.
+          TELEGRAM_POLL: "0"
         run: python -m agent.main
 
       - name: Commit signal journal
@@ -57,6 +60,13 @@ jobs:
             echo "Journal unchanged"
           else
             git commit -m "chore: update signal journal [skip ci]"
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
-            git push || echo "Push failed - next run retry karega"
+            for i in 1 2 3; do
+              if git push; then
+                echo "Journal pushed"
+                exit 0
+              fi
+              git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+              sleep 3
+            done
+            echo "Push failed - next run retry karega"
           fi

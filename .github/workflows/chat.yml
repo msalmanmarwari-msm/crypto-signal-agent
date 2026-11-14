@@ -1,0 +1,72 @@
+name: Telegram Live Chat
+
+on:
+  schedule:
+    # Har 15 min par naya worker queue hota hai; concurrency group ki wajah se
+    # ek waqt par sirf ek chalta hai, is liye chain lagatar bani rehti hai.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: telegram-chat
+  cancel-in-progress: false
+
+jobs:
+  chat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 58
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Git identity
+        run: |
+          git config user.name "signal-agent"
+          git config user.email "actions@users.noreply.github.com"
+
+      - name: Live chat worker
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          EQUITY_USDT: ${{ vars.EQUITY_USDT }}
+          RISK_PER_TRADE_PCT: ${{ vars.RISK_PER_TRADE_PCT }}
+          MIN_SCORE: ${{ vars.MIN_SCORE }}
+          MAX_SIGNALS_PER_DAY: ${{ vars.MAX_SIGNALS_PER_DAY }}
+          MAX_NEW_PER_RUN: ${{ vars.MAX_NEW_PER_RUN }}
+          MAX_PER_SIDE_PER_RUN: ${{ vars.MAX_PER_SIDE_PER_RUN }}
+          COOLDOWN_HOURS: ${{ vars.COOLDOWN_HOURS }}
+          BTC_STRICT: ${{ vars.BTC_STRICT }}
+        run: python scripts/chat_bot.py --commit --minutes 54
+
+      - name: Push leftover state
+        if: always()
+        run: |
+          if [ ! -f data/trade_journal.json ]; then
+            echo "No chat state yet"
+            exit 0
+          fi
+          git add data/trade_journal.json
+          if git diff --cached --quiet; then
+            echo "Chat state unchanged"
+            exit 0
+          fi
+          git commit -m "chore: update chat state [skip ci]"
+          for i in 1 2 3; do
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "Chat state pushed"
+              exit 0
+            fi
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            sleep 3
+          done
+          echo "Push failed - next run retry karega"

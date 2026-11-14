@@ -5,7 +5,8 @@ import sys
 import time
 from datetime import datetime, timezone
 
-from . import data, indicators, journal, news, notifier, tracker, trade_journal
+from . import data, journal, news, notifier, tracker, trade_journal
+from .market import fetch_prepared
 from .config import ENTRY_INTERVAL, TREND_INTERVAL, Settings, load_settings
 from .risk import build_plan
 from .strategy import evaluate
@@ -21,25 +22,7 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-HTF_LIMIT = 1000
-LTF_LIMIT = 400
-HTF_HISTORY_DAYS = 75  # 4h EMA200 ke liye ~33 din chahiye
 SUMMARY_WEEKDAY = 0  # Monday (0=Mon)
-
-
-def _fetch_prepared(symbol: str, interval: str, limit: int):
-    if interval == TREND_INTERVAL:
-        now = int(time.time() * 1000)
-        # MEXC 500 candles per request deta hai, isliye range-fetch zaroori hai.
-        df = data.fetch_range(symbol, interval, now - HTF_HISTORY_DAYS * 86_400_000, now, max_pages=6)
-    else:
-        df = data.fetch_klines(symbol, interval, limit=limit, drop_unclosed=True)
-    if df.empty:
-        return df
-    df = indicators.add_indicators(df)
-    if interval == TREND_INTERVAL:
-        df = indicators.add_htf_trend(df)
-    return df
 
 
 def run(settings: Settings) -> int:
@@ -52,9 +35,10 @@ def run(settings: Settings) -> int:
     jrnl = journal.load(settings.journal_path)
 
     try:
-        handled = trade_journal.poll(settings)
-        if handled:
-            log.info("Trade journal: %d Telegram command(s) handle hui", handled)
+        if settings.telegram_poll:
+            handled = trade_journal.poll(settings)
+            if handled:
+                log.info("Trade journal: %d Telegram command(s) handle hui", handled)
     except Exception:
         log.exception("Trade journal polling fail — scan par asar nahi")
 
@@ -65,7 +49,7 @@ def run(settings: Settings) -> int:
     btc1h = None
     if settings.btc_filter:
         try:
-            btc1h = _fetch_prepared("BTCUSDT", TREND_INTERVAL, HTF_LIMIT)
+            btc1h = fetch_prepared("BTCUSDT", TREND_INTERVAL)
             log.info("BTC 1h candles: %d", len(btc1h))
         except data.MarketDataError as exc:
             log.warning("BTC filter data unavailable, continuing without it: %s", exc)
@@ -88,8 +72,8 @@ def run(settings: Settings) -> int:
             continue
 
         try:
-            df1h = _fetch_prepared(symbol, TREND_INTERVAL, HTF_LIMIT)
-            df15 = _fetch_prepared(symbol, ENTRY_INTERVAL, LTF_LIMIT)
+            df1h = fetch_prepared(symbol, TREND_INTERVAL)
+            df15 = fetch_prepared(symbol, ENTRY_INTERVAL)
         except data.MarketDataError as exc:
             log.warning("%s: data fetch failed, skip (%s)", symbol, exc)
             continue

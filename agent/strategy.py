@@ -80,14 +80,51 @@ def _btc_regime(c: _Cols, b: int) -> int:
     return 0
 
 
-def evaluate(
+@dataclass
+class Analysis:
+    """Poora hisaab — evaluate() isi se signal banata hai, bot isi se jawab deta hai."""
+
+    symbol: str
+    side: str
+    score: int
+    max_score: int
+    reasons: list[str]
+    gates: list[tuple[str, bool]]
+    block: str | None
+    long_score: int
+    short_score: int
+    entry: float
+    atr15: float
+    atr_pct: float
+    rsi15: float
+    rsi1h: float
+    vol_ratio: float
+    h4_trend: float
+    btc_regime: int
+    swing_low: float
+    swing_high: float
+    candle_close_time_ms: int
+    candle_close_time_iso: str
+    mmc_points: int = 0
+    mmc_core: int = 0
+    has_qfl: bool = False
+    has_qb: bool = False
+    has_ccp: bool = False
+    has_room: bool = True
+    qfl_line: float | None = None
+    box_lo: float | None = None
+    box_hi: float | None = None
+
+
+def analyze_symbol(
     symbol: str,
     df1h: pd.DataFrame,
     df15: pd.DataFrame,
     btc1h: pd.DataFrame | None,
     settings: Settings,
     idx15: int | None = None,
-) -> Decision | None:
+    full: bool = False,
+) -> Analysis | None:
     if df15 is None or df1h is None or len(df15) < 60 or len(df1h) < WARMUP_1H:
         return None
 
@@ -121,15 +158,11 @@ def evaluate(
     if not math.isfinite(vol_ratio):
         vol_ratio = 1.0
 
-    # hard volatility filter: dead market aur crazy candle dono skip
     atr_pct = atr15 / close * 100.0
-    if not (settings.atr_min_pct <= atr_pct <= settings.atr_max_pct):
-        return None
+    atr_ok = settings.atr_min_pct <= atr_pct <= settings.atr_max_pct
 
-    # hard anti-chase filter: pichle 3 candles mein over-extended move
     past = c15.get(i - 3, "close")
-    if math.isfinite(past) and past > 0 and abs(close - past) > 3.5 * atr15:
-        return None
+    chase_ok = not (math.isfinite(past) and past > 0 and abs(close - past) > 3.5 * atr15)
 
     ema50_1h = c1h.get(j, "ema50")
     ema200_1h = c1h.get(j, "ema200")
@@ -149,7 +182,6 @@ def evaluate(
         if b >= WARMUP_1H - 1:
             btc_regime = _btc_regime(btc_cols, b)
 
-    # pullback + reclaim (entry timing)
     touched_up = touched_dn = False
     for k in range(max(0, i - 2), i + 1):
         if c15.get(k, "low") <= ema20 * 1.001:
@@ -221,17 +253,14 @@ def evaluate(
 
     side = "LONG" if long_score >= short_score else "SHORT"
     score = long_score if side == "LONG" else short_score
-    reasons = long_reasons if side == "LONG" else short_reasons
+    reasons = list(long_reasons if side == "LONG" else short_reasons)
 
-    # min_score core rules par lagta hai; MMC ek alag AND-gate hai taake
-    # weak core setups sirf MMC points ke dum par pass na ho jayein.
-    if score < settings.min_score:
-        return None
+    core_ok = score >= settings.min_score
 
-    max_score = MAX_CORE_SCORE
-
-    if settings.mmc_filter:
-        max_score += mmc.MAX_MMC_POINTS
+    # MMC mehnga hai — evaluate() mein sirf tab chalta hai jab tak pichle
+    # gates pass hon (backtest speed). Bot (full=True) hamesha chalta hai.
+    mres = None
+    if settings.mmc_filter and (full or (atr_ok and chase_ok and core_ok)):
         mres = mmc.analyze(
             c15,
             c1h,
@@ -243,52 +272,106 @@ def evaluate(
             qb=settings.qb_filter,
             ccp=settings.ccp_filter,
         )
-        if mres.core_points < settings.mmc_min_points:
-            return None
-        if settings.qfl_require and not (mres.has_qfl or mres.has_qb):
-            return None
-        if settings.ros_filter and not mres.has_room:
-            return None
+
+    mmc_core = mres.core_points if mres else 0
+    if mres is not None:
         score += mres.points
         reasons = reasons + mres.reasons
 
+    h4_trend = c1h.get(j, "h4_trend")
+    if not math.isfinite(h4_trend):
+        h4_trend = 0.0
+
+    gates: list[tuple[str, bool]] = [
+        (f"ATR% {settings.atr_min_pct:g}-{settings.atr_max_pct:g}% range", atr_ok),
+        ("anti-chase (3 candle move < 3.5 ATR)", chase_ok),
+        (f"core score >= {settings.min_score}", core_ok),
+    ]
+    if settings.mmc_filter:
+        gates.append((f"MMC core points >= {settings.mmc_min_points}", mmc_core >= settings.mmc_min_points))
+        if settings.qfl_require:
+            gates.append(("QFL/QB structure par price", bool(mres and (mres.has_qfl or mres.has_qb))))
+        if settings.ros_filter:
+            gates.append(("aage room (opposite swing door nahi)", bool(mres and mres.has_room)))
     if settings.htf_filter:
-        h4_trend = c1h.get(j, "h4_trend")
-        if not math.isfinite(h4_trend):
-            h4_trend = 0
-        if side == "LONG" and h4_trend != 1:
-            return None
-        if side == "SHORT" and h4_trend != -1:
-            return None
-        reasons = reasons + ["4h trend same direction mein hai"]
+        gates.append(("4h trend same direction", h4_trend == (1 if side == "LONG" else -1)))
+    gates.append(("BTC against nahi", btc_regime <= 0 if side == "SHORT" else btc_regime >= 0))
+    if settings.btc_strict:
+        gates.append(("BTC strict alignment", btc_regime == (-1 if side == "SHORT" else 1)))
+    gates.append(("RSI15 extreme nahi", rsi15 >= 25 if side == "SHORT" else rsi15 <= 75))
 
-    if side == "LONG" and btc_regime < 0:
-        return None
-    if side == "SHORT" and btc_regime > 0:
-        return None
-    if settings.btc_strict and btc1h is not None:
-        if side == "LONG" and btc_regime != 1:
-            return None
-        if side == "SHORT" and btc_regime != -1:
-            return None
-    if side == "LONG" and rsi15 > 75:
-        return None
-    if side == "SHORT" and rsi15 < 25:
-        return None
+    block = next((label for label, passed in gates if not passed), None)
+    if block is None and settings.htf_filter:
+        reasons.append("4h trend same direction mein hai")
 
-    return Decision(
+    qfl_line = box_lo = box_hi = None
+    if full:
+        zone = mmc._origin_zone(c15, i, side)
+        if zone is not None:
+            qfl_line, box_lo, box_hi = zone[0], zone[1], zone[2]
+
+    return Analysis(
         symbol=symbol.upper(),
         side=side,
         score=score,
-        max_score=max_score,
-        confidence=int(round(score / max_score * 100)),
+        max_score=MAX_CORE_SCORE + (mmc.MAX_MMC_POINTS if settings.mmc_filter else 0),
         reasons=reasons,
+        gates=gates,
+        block=block,
+        long_score=long_score,
+        short_score=short_score,
         entry=close,
         atr15=atr15,
+        atr_pct=atr_pct,
         rsi15=rsi15,
+        rsi1h=rsi1h,
         vol_ratio=vol_ratio,
+        h4_trend=h4_trend,
+        btc_regime=btc_regime,
         swing_low=swing_low,
         swing_high=swing_high,
         candle_close_time_ms=int(close_ts),
         candle_close_time_iso=_iso(int(close_ts)),
+        mmc_points=mres.points if mres else 0,
+        mmc_core=mmc_core,
+        has_qfl=bool(mres and mres.has_qfl),
+        has_qb=bool(mres and mres.has_qb),
+        has_ccp=bool(mres and mres.has_ccp),
+        has_room=bool(mres.has_room) if mres else True,
+        qfl_line=qfl_line,
+        box_lo=box_lo,
+        box_hi=box_hi,
     )
+
+
+def to_decision(a: Analysis) -> Decision:
+    return Decision(
+        symbol=a.symbol,
+        side=a.side,
+        score=a.score,
+        max_score=a.max_score,
+        confidence=int(round(a.score / a.max_score * 100)),
+        reasons=a.reasons,
+        entry=a.entry,
+        atr15=a.atr15,
+        rsi15=a.rsi15,
+        vol_ratio=a.vol_ratio,
+        swing_low=a.swing_low,
+        swing_high=a.swing_high,
+        candle_close_time_ms=a.candle_close_time_ms,
+        candle_close_time_iso=a.candle_close_time_iso,
+    )
+
+
+def evaluate(
+    symbol: str,
+    df1h: pd.DataFrame,
+    df15: pd.DataFrame,
+    btc1h: pd.DataFrame | None,
+    settings: Settings,
+    idx15: int | None = None,
+) -> Decision | None:
+    a = analyze_symbol(symbol, df1h, df15, btc1h, settings, idx15=idx15)
+    if a is None or a.block is not None:
+        return None
+    return to_decision(a)

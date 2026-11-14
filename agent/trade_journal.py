@@ -17,11 +17,12 @@ import json
 import logging
 import os
 import tempfile
+import time
 from datetime import datetime, timezone
 
 import requests
 
-from . import notifier
+from . import journal, live, notifier
 from .config import Settings
 
 log = logging.getLogger(__name__)
@@ -32,6 +33,7 @@ EMPTY = {"entries": [], "meta": {"next_id": 1, "telegram_offset": 0}}
 HELP_TEXT = (
     "📒 Trade Journal — commands\n"
     "━━━━━━━━━━━━━━━━\n"
+    "Seedha coin ka naam bhejein (jaise `XLM`) to live analysis milti hai.\n"
     "/add LONG DOGE +2.5 TP2 hit\n"
     "  • side: LONG ya SHORT\n"
     "  • coin: DOGE, BTC, ADA...\n"
@@ -139,9 +141,15 @@ def add_entry(data: dict, side: str, symbol: str, result_pct: float, note: str) 
     return entry
 
 
-def handle_command(cmd: str, args: list[str], data: dict) -> str:
+def handle_command(
+    cmd: str,
+    args: list[str],
+    data: dict,
+    settings: Settings | None = None,
+    jrnl: dict | None = None,
+) -> str:
     if cmd in ("/start", "/help"):
-        return HELP_TEXT
+        return f"🤖 Question poochein\n{live.HELP_LIVE}\n━━━━━━━━━━━━━━━━\n{HELP_TEXT}"
 
     if cmd == "/add":
         if len(args) < 3:
@@ -188,6 +196,11 @@ def handle_command(cmd: str, args: list[str], data: dict) -> str:
 
         return f"❌ Trade #{entry_id} nahi mila."
 
+    if cmd in live.COMMANDS and settings is not None:
+        reply = live.handle(cmd, args, settings, jrnl or {"signals": [], "meta": {}}, data)
+        if reply is not None:
+            return reply
+
     return "❓ Command samajh nahi aayi. `/help` bhejein."
 
 
@@ -213,6 +226,7 @@ def poll(settings: Settings, wait_seconds: int = 0) -> int:
         return 0
 
     data = load(settings.trade_journal_path)
+    jrnl = journal.load(settings.journal_path)
     offset = int(data["meta"].get("telegram_offset") or 0)
 
     try:
@@ -232,11 +246,12 @@ def poll(settings: Settings, wait_seconds: int = 0) -> int:
             log.info("Unknown chat %s se message ignore hua", chat_id)
             continue
 
-        cmd, args = parse_command(msg.get("text", ""))
-        if not cmd:
+        text = msg.get("text", "")
+        cmd, args = parse_command(text)
+        reply = handle_command(cmd, args, data, settings, jrnl) if cmd else live.plain_query(settings, text)
+        if not reply:
             continue
 
-        reply = handle_command(cmd, args, data)
         if notifier.send_text(reply, settings):
             handled += 1
         if cmd in ("/add", "/del"):
@@ -246,3 +261,35 @@ def poll(settings: Settings, wait_seconds: int = 0) -> int:
         data["meta"]["telegram_offset"] = offset
         save(settings.trade_journal_path, data)
     return handled
+
+
+def serve(
+    settings: Settings,
+    minutes: float = 54.0,
+    wait_seconds: int = 45,
+    on_batch=None,
+) -> int:
+    """Long-polling worker: Telegram commands ka jawab seconds mein.
+
+    Har poll ke baad offset state file mein save hoti hai; `on_batch` diya ho to
+    wahan state commit/push kiya ja sakta hai taake job band hone par replay na ho.
+    """
+    deadline = time.monotonic() + minutes * 60
+    total = 0
+    log.info("Chat worker chalu: %.0f min ke liye (long-poll %ds)", minutes, wait_seconds)
+    while time.monotonic() < deadline:
+        try:
+            handled = poll(settings, wait_seconds=wait_seconds)
+        except KeyboardInterrupt:
+            break
+        except Exception as exc:
+            log.warning("Chat worker error: %s", exc)
+            time.sleep(3)
+            continue
+        if handled:
+            total += handled
+            log.info("%d command(s) handle hui (total %d)", handled, total)
+            if on_batch is not None:
+                on_batch()
+    log.info("Chat worker band: total %d command(s)", total)
+    return total

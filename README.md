@@ -128,11 +128,15 @@ Multiple configs ka comparison with out-of-sample (train/OOS) check:
    - `TELEGRAM_BOT_TOKEN`
    - `TELEGRAM_CHAT_ID`
 3. (Optional) **Variables** tab mein: `EQUITY_USDT`, `RISK_PER_TRADE_PCT`, `MIN_SCORE`.
-4. **Actions** tab → *Crypto Signal Agent* → **Enable workflow**.
+4. **Actions** tab → *Crypto Signal Agent* → **Enable workflow**. Phir
+   *Telegram Live Chat* → **Enable workflow** (ye live Q&A ke liye hai, neeche section 10).
 5. Test: *Run workflow* dabayein. 1–2 minute mein Telegram par message aana chahiye.
 
 Workflow har 15 min par chalta hai (`.github/workflows/signals.yml`) aur
 `data/journal.json` ko repo mein commit karta hai — is se history aur stats save rehte hain.
+Dusra workflow (`.github/workflows/chat.yml`) Telegram live chat ke liye chain mein chalta
+rehta hai — is liye bot ke jawab seconds mein aate hain. Public repo par Actions minutes
+free/unlimited hote hain, is liye ye dono saath chalna cost nahi barhata.
 
 **Zaroori notes**
 - GitHub cron kabhi 2–10 minute late chal sakta hai — normal hai.
@@ -163,6 +167,7 @@ Workflow har 15 min par chalta hai (`.github/workflows/signals.yml`) aur
 | `NEWS_LOOKBACK_HOURS` | 24 | Kitne ghante purani news tak include ho |
 | `NEWS_MAX_CRYPTO` / `NEWS_MAX_MACRO` | 4 / 3 | Crypto aur forex/macro items ki limit |
 | `TRADE_JOURNAL_PATH` | data/trade_journal.json | Aap ki personal P&L journal ka file |
+| `TELEGRAM_POLL` | 1 | 0 = is process mein Telegram polling na karein (scan workflow aisa hi karta hai) |
 | `MAX_SIGNALS_PER_DAY` | 6 | Roz max signals |
 | `MAX_NEW_PER_RUN` | 2 | Ek scan (15 min) mein max naye signals |
 | `MAX_PER_SIDE_PER_RUN` | 2 | Ek direction (LONG/SHORT) mein max signals per scan |
@@ -304,7 +309,7 @@ ignore ho jate hain):
 
 | Command | Kaam |
 |---|---|
-| `/add LONG DOGE +2.5 TP2 hit` | naya trade add (LONG/SHORT, % ya USDT) |
+| `/add LONG DOGE +2.5 TP2 hit` | naya trade add (LONG/SHORT, result %) |
 | `/list` | aakhri 10 trades |
 | `/stats` | total trades, win-rate, net %, average, best/worst |
 | `/del 3` | 3 number wali entry delete |
@@ -317,19 +322,20 @@ Number ka format:
   compare kar sakta hai (account size badalne se number kharab nahi hota)
 
 Kaam kaise karta hai:
-- Agent har 15-minute scan mein pehle Telegram commands check karta hai, phir signal
-  scan karta hai.
-- **Turant reply** chahiye (25 second ke andar, scan ka intezaar nahi) to laptop par
-  `run_journal.bat` double-click karein ya:
+- Cloud par ek alag **live chat worker** (`.github/workflows/chat.yml`) Telegram ko
+  long-poll karta hai — command bhejne ke baad jawab aam tor par **seconds** mein aata hai.
+- Scan workflow (`.github/workflows/signals.yml`) mein polling band hai
+  (`TELEGRAM_POLL=0`) taake dono ek hi bot offset par race na karein.
+- Laptop par bhi turant reply chahiye to `run_journal.bat` double-click karein ya:
   ```bash
   .venv\Scripts\python scripts/trade_bot.py
   ```
   Ye sirf journal commands sunta hai, trading se koi taluq nahi.
 - Reply foran Telegram par aata hai aur `data/trade_journal.json` mein save hota hai.
-  GitHub Actions par bhi ye file roz commit hoti hai, is liye data zaya nahi hota.
-- **Ek waqt mein ek hi jagah likhein:** agar cloud (GitHub) par agent chal raha hai to
-  rozana ka `/add` wahi se karein — laptop wala `run_journal.bat` sirf tab chalayein jab
-  cloud band ho, warna dono ki copy alag ho sakti hai.
+  Chat worker har command ke baad ye file git mein push karta hai, is liye data zaya nahi hota.
+- **Ek waqt mein ek hi jagah likhein:** cloud par worker chal raha ho to `/add` wahi se
+  karein — laptop wala `run_journal.bat` sirf tab chalayein jab cloud band ho, warna
+  dono ki copy alag ho sakti hai.
 - Telegram ko "safe place" samajhne ki ek wajah: message aap ke apne bot ke through
   jaata hai, koi third-party app install nahi karni parti.
 
@@ -346,32 +352,89 @@ Best: +4.10% | Worst: -1.00%
 
 ---
 
-## 10. Structure
+## 10. Telegram par live sawal-jawab (Q&A commands)
+
+Bot sirf signal bhejne wala nahi — aap message karke pooch sakte hain. Har jawab
+aap ke **asli** data se banta hai (koi andaaza nahi), aur wahi rules use hote hain jo
+signal banate waqt chalte hain.
+
+| Command | Jawab |
+|---|---|
+| `/setup XLM` | poora analysis: SHORT/LONG lean, price, ATR%, RSI, volume, core + MMC score, QFL line aur distance, **kaunsa gate rok raha hai**, 4h trend, BTC regime |
+| `XLM` (sirf coin ka naam) | wahi `/setup` — slash likhne ki zaroorat nahi |
+| `/price DOGE` | price, 24h change, 24h high/low |
+| `/signals` | open signals + last closed (R ke saath) + win rate |
+| `/status` | last run, last news, rules summary, total signals, aap ki personal journal |
+| `/news` | abhi taaza Hinglish news digest (journal ki seen-list ko chhede bagair) |
+| `/help` | saari commands |
+
+Sample `/setup` reply (jab koi rule block kar raha ho):
+
+```
+🔴 XLM — SHORT lean
+Price 0.13210 | ATR 1.33%
+1h RSI 20 | 15m RSI 32 | Vol 0.6x
+Score: core 5/9 + MMC 1 pts
+MMC: QFL ✅
+QFL line 0.13270 — price 0.45% neeche
+
+❌ Rok: core score >= 8
+Baaki fail: MMC core points >= 1
+4h trend bearish | BTC 1h bearish
+```
+
+Iska matlab: setup SHORT ki taraf hai lekin score 8 se kam hai, is liye koi signal
+nahi. Bot **jhooti signal nahi banata** — jo gate fail hai wahi likh deta hai.
+
+Setup hua to jawab aisa aata hai:
+
+```
+✅ Saare gates pass — signal eligible.
+Entry 0.13210 | Stop 0.13620 (3.10%)
+TP1 0.12800 | TP2 0.12390 | TP3 0.11980
+```
+
+Notes:
+- Jawab dene ke liye live Binance/MEXC data fetch hota hai — 2 se 10 second lag sakte hain.
+- `/setup` **signal nahi bhejta**; signal sirf 15-minute scan bhejta hai (kyunki wahi
+  journal/tracking mein record hota hai). Yahan aap "abhi haalat kya hai" dekh sakte hain.
+- Sirf aap ki `TELEGRAM_CHAT_ID` se aaye messages ka jawab milta hai.
+- Ye rule-based jawab hai (AI nahi) — is liye free hai aur number fabricate nahi karta.
+
+---
+
+## 11. Structure
 
 ```
 agent/
   config.py      settings (.env)
   data.py        Binance klines (free public API)
   indicators.py  EMA / RSI / MACD / ATR / volume / 4h trend
-  strategy.py    multi-timeframe rules -> LONG/SHORT decision
+  market.py      1h + 15m prepared data (indicators laga kar)
+  strategy.py    multi-timeframe rules -> LONG/SHORT decision (+ analyze_symbol)
   mmc.py         MMC detectors (BOS/CHoCH, FVG, sweep, discount/premium, QFL, QB, CcP, ROS)
+  live.py        Telegram Q&A: /setup, /price, /signals, /status, /news
   news.py        crypto + forex + macro RSS -> Hinglish digest
-  trade_journal.py  Telegram commands se aap ki personal P&L journal
+  trade_journal.py  Telegram commands + live chat worker loop
   risk.py        SL/TP + position size
   outcomes.py    trade management simulation (TP1 50%, SL->BE, TP2)
   tracker.py     open signals ka result update
   journal.py     data/journal.json (history + stats)
   notifier.py    Telegram message
-  main.py        ek scan cycle (commands -> news -> signals)
+  main.py        ek scan cycle (signal scan -> news -> summary)
 scripts/
   backtest.py    past data par win-rate
   tune.py        config comparison + out-of-sample
-  trade_bot.py   sirf journal commands sunne wala instant bot
+  trade_bot.py   laptop par instant chat (journal + live commands)
+  chat_bot.py    cloud live chat worker (long-poll, state git push)
+.github/workflows/
+  signals.yml    har 15 min scan (TELEGRAM_POLL=0)
+  chat.yml       live chat worker (chain mein chalta rehta hai)
 ```
 
 ---
 
-## 11. PDF rules integrate karna
+## 12. PDF rules integrate karna
 
 Jab aap apne rules PDF mein dein, in files mein change hoga:
 
@@ -382,7 +445,7 @@ Jab aap apne rules PDF mein dein, in files mein change hoga:
 
 ---
 
-## 12. Disclaimer
+## 13. Disclaimer
 
 Ye project educational hai, financial advice nahi. Crypto mein capital loss ka pura risk hai.
 Pehle paper-trade ya minimum size se test karein. Past backtest future returns guarantee nahi karta.
