@@ -40,11 +40,11 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.0
+      "unrealized_r": -0.32
     }
   ],
   "meta": {
-    "last_run": "2026-11-15T18:52:05Z",
+    "last_run": "2026-11-15T19:35:02Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -68,9 +68,10 @@
       "b47ceffb530c",
       "58f456702c54",
       "b5935624d5db",
-      "c9c9e760a318"
+      "c9c9e760a318",
+      "4eb888233067"
     ],
-    "last_news_at": "2026-11-15T16:50:51Z",
+    "last_news_at": "2026-11-15T19:35:02Z",
     "last_signal_at": "2026-11-15T16:50:50Z"
   }
 }
