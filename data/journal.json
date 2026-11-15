@@ -1,7 +1,7 @@
 {
   "signals": [],
   "meta": {
-    "last_run": "2026-11-15T13:25:11Z",
+    "last_run": "2026-11-15T14:15:11Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -21,8 +21,10 @@
       "57cef0f943dc",
       "f29911ab104b",
       "26a7b67b2baf",
-      "ee9d0e369afb"
+      "ee9d0e369afb",
+      "b47ceffb530c",
+      "58f456702c54"
     ],
-    "last_news_at": "2026-11-15T10:56:58Z"
+    "last_news_at": "2026-11-15T14:15:11Z"
   }
 }
