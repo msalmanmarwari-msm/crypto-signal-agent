@@ -40,11 +40,11 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": -0.534
+      "unrealized_r": -0.107
     }
   ],
   "meta": {
-    "last_run": "2026-11-15T23:51:47Z",
+    "last_run": "2026-11-16T00:50:11Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -74,6 +74,7 @@
       "8857a98672e2"
     ],
     "last_news_at": "2026-11-15T23:51:47Z",
-    "last_signal_at": "2026-11-15T16:50:50Z"
+    "last_signal_at": "2026-11-15T16:50:50Z",
+    "last_summary_date": "2026-11-16"
   }
 }
