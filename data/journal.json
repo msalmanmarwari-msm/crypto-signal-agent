@@ -40,7 +40,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.64
+      "unrealized_r": 0.32
     },
     {
       "id": "HBARUSDT-1794871799999",
@@ -116,12 +116,12 @@
       "entry_time_ms": 1794901499999,
       "entry_time_iso": "17 Nov 2026, 07:44 UTC",
       "created_at": "2026-11-17T07:59:01Z",
-      "status": "OPEN",
+      "status": "WIN",
       "hit_tp1": true,
       "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "outcome_r": 0.5,
+      "closed_at": "2026-11-17T11:44:59Z",
+      "close_reason": "TP1 + breakeven",
       "unrealized_r": 0.565
     },
     {
@@ -164,7 +164,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": -0.419
+      "unrealized_r": -0.718
     },
     {
       "id": "ADAUSDT-1794912299999",
@@ -199,17 +199,17 @@
       "entry_time_ms": 1794912299999,
       "entry_time_iso": "17 Nov 2026, 10:44 UTC",
       "created_at": "2026-11-17T10:51:36Z",
-      "status": "OPEN",
+      "status": "LOSS",
       "hit_tp1": false,
       "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "outcome_r": -1.0,
+      "closed_at": "2026-11-17T12:29:59Z",
+      "close_reason": "stop hit",
       "unrealized_r": -0.374
     }
   ],
   "meta": {
-    "last_run": "2026-11-17T11:40:09Z",
+    "last_run": "2026-11-17T12:35:29Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -315,9 +315,13 @@
       "d6939656c989",
       "a3dd99fcbfed",
       "4bf2c765c442",
-      "54e26735d630"
+      "54e26735d630",
+      "050c6bf761d2",
+      "a0607e5f0c90",
+      "d474f9458bfe",
+      "0c4f86b7fbc2"
     ],
-    "last_news_at": "2026-11-17T10:51:38Z",
+    "last_news_at": "2026-11-17T12:35:29Z",
     "last_signal_at": "2026-11-17T10:51:36Z",
     "last_summary_date": "2026-11-16"
   }
