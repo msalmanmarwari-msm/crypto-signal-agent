@@ -34,12 +34,12 @@
       "entry_time_ms": 1794761099999,
       "entry_time_iso": "15 Nov 2026, 16:44 UTC",
       "created_at": "2026-11-15T16:50:50Z",
-      "status": "OPEN",
+      "status": "WIN",
       "hit_tp1": true,
       "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "outcome_r": 0.5,
+      "closed_at": "2026-11-17T23:14:59Z",
+      "close_reason": "TP1 + breakeven",
       "unrealized_r": 0.713
     },
     {
@@ -158,12 +158,12 @@
       "entry_time_ms": 1794912299999,
       "entry_time_iso": "17 Nov 2026, 10:44 UTC",
       "created_at": "2026-11-17T10:51:35Z",
-      "status": "OPEN",
+      "status": "LOSS",
       "hit_tp1": false,
       "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "outcome_r": -1.0,
+      "closed_at": "2026-11-17T23:14:59Z",
+      "close_reason": "stop hit",
       "unrealized_r": -0.598
     },
     {
@@ -249,7 +249,7 @@
     }
   ],
   "meta": {
-    "last_run": "2026-11-17T22:33:54Z",
+    "last_run": "2026-11-17T23:30:34Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
