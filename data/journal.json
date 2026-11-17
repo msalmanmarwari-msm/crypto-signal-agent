@@ -40,7 +40,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.927
+      "unrealized_r": 1.034
     },
     {
       "id": "HBARUSDT-1794871799999",
@@ -164,7 +164,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": -0.18
+      "unrealized_r": -0.06
     },
     {
       "id": "ADAUSDT-1794912299999",
@@ -245,11 +245,11 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.843
+      "unrealized_r": 1.186
     }
   ],
   "meta": {
-    "last_run": "2026-11-17T16:44:47Z",
+    "last_run": "2026-11-17T17:44:36Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
