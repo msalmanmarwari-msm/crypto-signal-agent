@@ -40,7 +40,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.427
+      "unrealized_r": 0.213
     },
     {
       "id": "HBARUSDT-1794871799999",
@@ -82,11 +82,11 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.461
+      "unrealized_r": -0.23
     }
   ],
   "meta": {
-    "last_run": "2026-11-17T02:38:25Z",
+    "last_run": "2026-11-17T03:30:57Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -177,9 +177,11 @@
       "dcfb0b9bb95b",
       "547d1e40759f",
       "ff5b61e15dc1",
-      "a8d091bbe73f"
+      "a8d091bbe73f",
+      "f430238a7cad",
+      "e54151f22b18"
     ],
-    "last_news_at": "2026-11-17T01:45:05Z",
+    "last_news_at": "2026-11-17T03:30:57Z",
     "last_signal_at": "2026-11-16T23:39:19Z",
     "last_summary_date": "2026-11-16"
   }
