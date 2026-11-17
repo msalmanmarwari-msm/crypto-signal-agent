@@ -164,7 +164,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": -0.718
+      "unrealized_r": -0.598
     },
     {
       "id": "ADAUSDT-1794912299999",
@@ -209,7 +209,7 @@
     }
   ],
   "meta": {
-    "last_run": "2026-11-17T13:54:58Z",
+    "last_run": "2026-11-17T14:48:27Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
