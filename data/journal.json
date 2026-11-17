@@ -164,7 +164,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": -0.658
+      "unrealized_r": -0.598
     },
     {
       "id": "ADAUSDT-1794912299999",
@@ -239,17 +239,17 @@
       "entry_time_ms": 1794929399999,
       "entry_time_iso": "17 Nov 2026, 15:29 UTC",
       "created_at": "2026-11-17T15:44:23Z",
-      "status": "OPEN",
+      "status": "WIN",
       "hit_tp1": true,
       "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "outcome_r": 0.5,
+      "closed_at": "2026-11-17T21:44:59Z",
+      "close_reason": "TP1 + breakeven",
       "unrealized_r": 0.729
     }
   ],
   "meta": {
-    "last_run": "2026-11-17T21:31:57Z",
+    "last_run": "2026-11-17T22:33:54Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -392,9 +392,12 @@
       "1d7c03066320",
       "764e59dc111a",
       "2ea0693076eb",
-      "3fff691a67c3"
+      "3fff691a67c3",
+      "a5dd3a531cd4",
+      "679ec63c56e4",
+      "9b92046aefdc"
     ],
-    "last_news_at": "2026-11-17T21:31:57Z",
+    "last_news_at": "2026-11-17T22:33:54Z",
     "last_signal_at": "2026-11-17T15:44:23Z",
     "last_summary_date": "2026-11-16"
   }
