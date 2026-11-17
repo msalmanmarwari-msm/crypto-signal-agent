@@ -40,7 +40,7 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.32
+      "unrealized_r": 0.427
     },
     {
       "id": "HBARUSDT-1794871799999",
@@ -77,17 +77,56 @@
       "entry_time_iso": "16 Nov 2026, 23:29 UTC",
       "created_at": "2026-11-16T23:39:19Z",
       "status": "OPEN",
-      "hit_tp1": false,
+      "hit_tp1": true,
       "hit_tp2": false,
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.691
+      "unrealized_r": 0.839
+    },
+    {
+      "id": "DOGEUSDT-1794901499999",
+      "symbol": "DOGEUSDT",
+      "side": "SHORT",
+      "entry": 0.05901,
+      "stop": 0.059625984,
+      "tp1": 0.058394016,
+      "tp2": 0.057778032,
+      "tp3": 0.0571620479,
+      "risk_pct": 1.044,
+      "risk_per_unit": 0.0006159840224637253,
+      "qty": 1623.418730895555,
+      "score": 10,
+      "max_score": 19,
+      "confidence": 53,
+      "reasons": [
+        "1h downtrend: EMA50 < EMA200 aur price EMA50 ke neeche",
+        "1h RSI healthy downtrend zone mein (48)",
+        "15m MACD histogram negative",
+        "15m RSI 32-55 entry zone (49)",
+        "Volume average ka 1.4x",
+        "15m rally hokar EMA20 se reject hua",
+        "BTC 1h bullish nahi hai",
+        "MMC premium zone: 1h range ka 75% par entry",
+        "MMC QFL: origin line ka retest aur hold",
+        "4h trend same direction mein hai"
+      ],
+      "rsi15": 48.81,
+      "vol_ratio": 1.38,
+      "entry_time_ms": 1794901499999,
+      "entry_time_iso": "17 Nov 2026, 07:44 UTC",
+      "created_at": "2026-11-17T07:59:01Z",
+      "status": "OPEN",
+      "hit_tp1": false,
+      "hit_tp2": false,
+      "outcome_r": null,
+      "closed_at": null,
+      "close_reason": null
     }
   ],
   "meta": {
-    "last_run": "2026-11-17T06:41:51Z",
-    "last_run_sent": 0,
+    "last_run": "2026-11-17T07:59:03Z",
+    "last_run_sent": 1,
     "news_seen": [
       "886edbc718ca",
       "8521d5c6809d",
@@ -182,10 +221,13 @@
       "e54151f22b18",
       "1454dfcc4f0f",
       "a3dcf588a094",
-      "15c98e552298"
+      "15c98e552298",
+      "bf47f16b937c",
+      "3eb4bfdad604",
+      "cac68da840f2"
     ],
-    "last_news_at": "2026-11-17T05:39:21Z",
-    "last_signal_at": "2026-11-16T23:39:19Z",
+    "last_news_at": "2026-11-17T07:59:03Z",
+    "last_signal_at": "2026-11-17T07:59:01Z",
     "last_summary_date": "2026-11-16"
   }
 }
