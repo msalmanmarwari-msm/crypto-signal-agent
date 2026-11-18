@@ -285,11 +285,11 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.0
+      "unrealized_r": 0.245
     }
   ],
   "meta": {
-    "last_run": "2026-11-18T10:52:29Z",
+    "last_run": "2026-11-18T11:50:08Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
