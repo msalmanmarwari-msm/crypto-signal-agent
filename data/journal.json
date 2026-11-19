@@ -325,12 +325,13 @@
       "hit_tp2": false,
       "outcome_r": null,
       "closed_at": null,
-      "close_reason": null
+      "close_reason": null,
+      "unrealized_r": -0.01
     }
   ],
   "meta": {
-    "last_run": "2026-11-19T20:44:17Z",
-    "last_run_sent": 1,
+    "last_run": "2026-11-19T21:34:26Z",
+    "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
       "8521d5c6809d",
@@ -579,9 +580,16 @@
       "4c29b349c828",
       "013af8288cb3",
       "6ae96dd6a050",
-      "9f7454fefc9d"
+      "9f7454fefc9d",
+      "8cb20b95b1e0",
+      "e56129deea76",
+      "920d1e51ed87",
+      "1cac3c1ac5db",
+      "146135490046",
+      "b843b64455f5",
+      "0214c13538e6"
     ],
-    "last_news_at": "2026-11-19T19:54:12Z",
+    "last_news_at": "2026-11-19T21:34:26Z",
     "last_signal_at": "2026-11-19T20:44:17Z",
     "last_summary_date": "2026-11-16"
   }
