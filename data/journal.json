@@ -286,11 +286,51 @@
       "closed_at": "2026-11-18T14:45:00Z",
       "close_reason": "TP2 hit",
       "unrealized_r": 0.989
+    },
+    {
+      "id": "CROUSDT-1795120200000",
+      "symbol": "CROUSDT",
+      "side": "SHORT",
+      "entry": 0.04108,
+      "stop": 0.0421040565,
+      "tp1": 0.0400559435,
+      "tp2": 0.039031887,
+      "tp3": 0.0380078304,
+      "risk_pct": 2.493,
+      "risk_per_unit": 0.0010240565173639943,
+      "qty": 976.5086038162057,
+      "score": 14,
+      "max_score": 19,
+      "confidence": 74,
+      "reasons": [
+        "1h downtrend: EMA50 < EMA200 aur price EMA50 ke neeche",
+        "1h RSI healthy downtrend zone mein (38)",
+        "15m MACD histogram negative",
+        "15m MACD momentum neeche",
+        "15m RSI 32-55 entry zone (42)",
+        "15m rally hokar EMA20 se reject hua",
+        "BTC 1h bullish nahi hai",
+        "MMC BOS/CHoCH: 15m structure fresh break",
+        "MMC FVG: imbalance rebalance zone par entry",
+        "MMC QFL: origin line ka retest aur hold",
+        "4h trend same direction mein hai"
+      ],
+      "rsi15": 42.24,
+      "vol_ratio": 0.69,
+      "entry_time_ms": 1795120200000,
+      "entry_time_iso": "19 Nov 2026, 20:30 UTC",
+      "created_at": "2026-11-19T20:44:17Z",
+      "status": "OPEN",
+      "hit_tp1": false,
+      "hit_tp2": false,
+      "outcome_r": null,
+      "closed_at": null,
+      "close_reason": null
     }
   ],
   "meta": {
-    "last_run": "2026-11-19T19:54:12Z",
-    "last_run_sent": 0,
+    "last_run": "2026-11-19T20:44:17Z",
+    "last_run_sent": 1,
     "news_seen": [
       "886edbc718ca",
       "8521d5c6809d",
@@ -542,7 +582,7 @@
       "9f7454fefc9d"
     ],
     "last_news_at": "2026-11-19T19:54:12Z",
-    "last_signal_at": "2026-11-18T09:50:45Z",
+    "last_signal_at": "2026-11-19T20:44:17Z",
     "last_summary_date": "2026-11-16"
   }
 }
