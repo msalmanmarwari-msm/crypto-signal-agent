@@ -289,7 +289,7 @@
     }
   ],
   "meta": {
-    "last_run": "2026-11-18T23:32:57Z",
+    "last_run": "2026-11-19T00:33:33Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -495,9 +495,10 @@
       "c64ed3590f3b",
       "28baf1f16154",
       "41670f7ded52",
-      "de2842a7c193"
+      "de2842a7c193",
+      "65bae3bff163"
     ],
-    "last_news_at": "2026-11-18T23:32:57Z",
+    "last_news_at": "2026-11-19T00:33:33Z",
     "last_signal_at": "2026-11-18T09:50:45Z",
     "last_summary_date": "2026-11-16"
   }
