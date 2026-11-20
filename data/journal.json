@@ -320,12 +320,12 @@
       "entry_time_ms": 1795120200000,
       "entry_time_iso": "19 Nov 2026, 20:30 UTC",
       "created_at": "2026-11-19T20:44:17Z",
-      "status": "OPEN",
+      "status": "WIN",
       "hit_tp1": true,
-      "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "hit_tp2": true,
+      "outcome_r": 1.5,
+      "closed_at": "2026-11-20T16:15:00Z",
+      "close_reason": "TP2 hit",
       "unrealized_r": 1.149
     },
     {
@@ -370,7 +370,7 @@
     }
   ],
   "meta": {
-    "last_run": "2026-11-20T15:47:02Z",
+    "last_run": "2026-11-20T16:50:29Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -664,9 +664,15 @@
       "5b65459c275c",
       "74ae76f2b2ff",
       "200a33c83454",
-      "177115877c06"
+      "177115877c06",
+      "fd6aadd4bfc3",
+      "f3bb5683865a",
+      "4630fe1faeca",
+      "0d71adb82b77",
+      "1c5d79fb8ac3",
+      "ca9fc341321c"
     ],
-    "last_news_at": "2026-11-20T15:47:02Z",
+    "last_news_at": "2026-11-20T16:50:29Z",
     "last_signal_at": "2026-11-20T09:38:08Z",
     "last_summary_date": "2026-11-16"
   }
