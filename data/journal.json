@@ -326,12 +326,51 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.137
+      "unrealized_r": 0.088
+    },
+    {
+      "id": "SHIBUSDT-1795166999999",
+      "symbol": "SHIBUSDT",
+      "side": "SHORT",
+      "entry": 3.72e-06,
+      "stop": 3.7824e-06,
+      "tp1": 3.6576e-06,
+      "tp2": 3.5951e-06,
+      "tp3": 3.5327e-06,
+      "risk_pct": 1.678,
+      "risk_per_unit": 6.243206152306971e-08,
+      "qty": 16017411.176314961,
+      "score": 11,
+      "max_score": 19,
+      "confidence": 58,
+      "reasons": [
+        "1h downtrend: EMA50 < EMA200 aur price EMA50 ke neeche",
+        "1h RSI healthy downtrend zone mein (39)",
+        "15m MACD histogram negative",
+        "15m MACD momentum neeche",
+        "15m RSI 32-55 entry zone (39)",
+        "15m rally hokar EMA20 se reject hua",
+        "BTC 1h bullish nahi hai",
+        "MMC FVG: imbalance rebalance zone par entry",
+        "MMC QFL: origin line ka retest aur hold",
+        "4h trend same direction mein hai"
+      ],
+      "rsi15": 39.21,
+      "vol_ratio": 1.02,
+      "entry_time_ms": 1795166999999,
+      "entry_time_iso": "20 Nov 2026, 09:29 UTC",
+      "created_at": "2026-11-20T09:38:08Z",
+      "status": "OPEN",
+      "hit_tp1": false,
+      "hit_tp2": false,
+      "outcome_r": null,
+      "closed_at": null,
+      "close_reason": null
     }
   ],
   "meta": {
-    "last_run": "2026-11-20T08:40:16Z",
-    "last_run_sent": 0,
+    "last_run": "2026-11-20T09:38:08Z",
+    "last_run_sent": 1,
     "news_seen": [
       "886edbc718ca",
       "8521d5c6809d",
@@ -609,7 +648,7 @@
       "db19a43de31c"
     ],
     "last_news_at": "2026-11-20T08:40:16Z",
-    "last_signal_at": "2026-11-19T20:44:17Z",
+    "last_signal_at": "2026-11-20T09:38:08Z",
     "last_summary_date": "2026-11-16"
   }
 }
