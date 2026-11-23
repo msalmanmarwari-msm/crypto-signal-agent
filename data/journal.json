@@ -443,12 +443,12 @@
       "entry_time_ms": 1795399199999,
       "entry_time_iso": "23 Nov 2026, 01:59 UTC",
       "created_at": "2026-11-23T02:00:36Z",
-      "status": "OPEN",
+      "status": "LOSS",
       "hit_tp1": false,
       "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "outcome_r": -1.0,
+      "closed_at": "2026-11-23T05:44:59Z",
+      "close_reason": "stop hit",
       "unrealized_r": -0.72
     },
     {
@@ -484,17 +484,17 @@
       "entry_time_ms": 1795399200000,
       "entry_time_iso": "23 Nov 2026, 02:00 UTC",
       "created_at": "2026-11-23T02:00:37Z",
-      "status": "OPEN",
+      "status": "LOSS",
       "hit_tp1": false,
       "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "outcome_r": -1.0,
+      "closed_at": "2026-11-23T05:45:00Z",
+      "close_reason": "stop hit",
       "unrealized_r": -0.747
     }
   ],
   "meta": {
-    "last_run": "2026-11-23T05:32:18Z",
+    "last_run": "2026-11-23T06:48:29Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -832,9 +832,11 @@
       "cbfd42a196b9",
       "3c091a74f56c",
       "6a5f2b0a776c",
-      "d70e9847d687"
+      "d70e9847d687",
+      "0189677f2347",
+      "cb22635c9b2c"
     ],
-    "last_news_at": "2026-11-23T05:32:18Z",
+    "last_news_at": "2026-11-23T06:48:29Z",
     "last_signal_at": "2026-11-23T02:00:37Z",
     "last_summary_date": "2026-11-23"
   }
