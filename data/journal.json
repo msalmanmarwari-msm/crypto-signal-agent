@@ -526,17 +526,59 @@
       "entry_time_iso": "25 Nov 2026, 04:44 UTC",
       "created_at": "2026-11-25T04:58:01Z",
       "status": "OPEN",
-      "hit_tp1": false,
+      "hit_tp1": true,
       "hit_tp2": false,
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.831
+      "unrealized_r": 0.961
+    },
+    {
+      "id": "SHIBUSDT-1795610699999",
+      "symbol": "SHIBUSDT",
+      "side": "SHORT",
+      "entry": 3.44e-06,
+      "stop": 3.5302e-06,
+      "tp1": 3.3498e-06,
+      "tp2": 3.2596e-06,
+      "tp3": 3.1694e-06,
+      "risk_pct": 2.622,
+      "risk_per_unit": 9.018921291562762e-08,
+      "qty": 11087800.49932916,
+      "score": 15,
+      "max_score": 19,
+      "confidence": 79,
+      "reasons": [
+        "1h downtrend: EMA50 < EMA200 aur price EMA50 ke neeche",
+        "1h RSI healthy downtrend zone mein (32)",
+        "15m MACD histogram negative",
+        "15m MACD momentum neeche",
+        "15m RSI 32-55 entry zone (34)",
+        "Volume average ka 1.3x",
+        "15m rally hokar EMA20 se reject hua",
+        "BTC 1h bullish nahi hai",
+        "MMC BOS/CHoCH: 15m structure fresh break",
+        "MMC QFL: origin line ka retest aur hold",
+        "MMC QB: quantity box ke andar se entry",
+        "MMC CcP: strong engulfing/rejection candle",
+        "4h trend same direction mein hai"
+      ],
+      "rsi15": 33.92,
+      "vol_ratio": 1.33,
+      "entry_time_ms": 1795610699999,
+      "entry_time_iso": "25 Nov 2026, 12:44 UTC",
+      "created_at": "2026-11-25T12:59:58Z",
+      "status": "OPEN",
+      "hit_tp1": false,
+      "hit_tp2": false,
+      "outcome_r": null,
+      "closed_at": null,
+      "close_reason": null
     }
   ],
   "meta": {
-    "last_run": "2026-11-25T11:51:21Z",
-    "last_run_sent": 0,
+    "last_run": "2026-11-25T13:00:00Z",
+    "last_run_sent": 1,
     "news_seen": [
       "886edbc718ca",
       "8521d5c6809d",
@@ -998,10 +1040,14 @@
       "c248c6e6479b",
       "a0572a33c1a1",
       "a9104fb69c4d",
-      "42e21df6575e"
+      "42e21df6575e",
+      "7284d9c0e55f",
+      "d69abd1f6f60",
+      "f2a819cd63f1",
+      "d2e451747a4e"
     ],
-    "last_news_at": "2026-11-25T11:51:21Z",
-    "last_signal_at": "2026-11-25T04:58:01Z",
+    "last_news_at": "2026-11-25T13:00:00Z",
+    "last_signal_at": "2026-11-25T12:59:58Z",
     "last_summary_date": "2026-11-23"
   }
 }
