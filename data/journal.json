@@ -525,12 +525,12 @@
       "entry_time_ms": 1795581899999,
       "entry_time_iso": "25 Nov 2026, 04:44 UTC",
       "created_at": "2026-11-25T04:58:01Z",
-      "status": "OPEN",
+      "status": "WIN",
       "hit_tp1": true,
-      "hit_tp2": false,
-      "outcome_r": null,
-      "closed_at": null,
-      "close_reason": null,
+      "hit_tp2": true,
+      "outcome_r": 1.5,
+      "closed_at": "2026-11-25T14:44:59Z",
+      "close_reason": "TP2 hit",
       "unrealized_r": 1.225
     },
     {
@@ -574,11 +574,11 @@
       "outcome_r": null,
       "closed_at": null,
       "close_reason": null,
-      "unrealized_r": 0.0
+      "unrealized_r": 0.222
     }
   ],
   "meta": {
-    "last_run": "2026-11-25T14:21:53Z",
+    "last_run": "2026-11-25T15:30:41Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -1054,9 +1054,16 @@
       "5fab88203a9d",
       "d55aae136d4a",
       "d699069a72ea",
-      "0d31f541cf89"
+      "0d31f541cf89",
+      "6f487bbb6a24",
+      "5ed1cdf922f7",
+      "d85bb8425857",
+      "c78f6bc0098a",
+      "e24834a58468",
+      "cf0d2e7965ff",
+      "4f1a6c1bfbbb"
     ],
-    "last_news_at": "2026-11-25T14:21:53Z",
+    "last_news_at": "2026-11-25T15:30:41Z",
     "last_signal_at": "2026-11-25T12:59:58Z",
     "last_summary_date": "2026-11-23"
   }
