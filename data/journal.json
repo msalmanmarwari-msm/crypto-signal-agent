@@ -578,7 +578,7 @@
     }
   ],
   "meta": {
-    "last_run": "2026-11-26T15:52:11Z",
+    "last_run": "2026-11-26T16:56:36Z",
     "last_run_sent": 0,
     "news_seen": [
       "886edbc718ca",
@@ -1113,9 +1113,13 @@
       "7db028125720",
       "cbcc3ebfff8a",
       "b759ecec8b89",
-      "3021a95fc057"
+      "3021a95fc057",
+      "0cdd78666df4",
+      "a48a7cb91a27",
+      "50825e579ab1",
+      "1683634aa187"
     ],
-    "last_news_at": "2026-11-26T15:52:11Z",
+    "last_news_at": "2026-11-26T16:56:36Z",
     "last_signal_at": "2026-11-25T12:59:58Z",
     "last_summary_date": "2026-11-23"
   }
